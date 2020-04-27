@@ -1,7 +1,7 @@
-import $ from 'jquery';
-import './styles.css';
+// import $ from 'jquery';
+// import './styles.css';
 
-$(document).ready(function() {
-  $('#').submit(function(event) {
-  }
-});
+// $(document).ready(function() {
+//   $('#').submit(function(event) {
+//   }
+// });
