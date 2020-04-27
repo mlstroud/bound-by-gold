@@ -1,8 +1,10 @@
-import { Combat } from '../src/combat.js'
+import { Combat } from './../src/combat.js'
+import { Mercenary } from './../src/combat.js'
 
 describe('Test combat functionality', () => {
   let battle;
   let merc;
+  let mercenaries;
   let enemies;
 
   beforeEach(() => {
