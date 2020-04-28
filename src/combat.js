@@ -4,27 +4,7 @@ export class Item {
     this.type = type;
     this.attack = attack;
     this.defense = defense;
-  }
-  /*RELATIVE ITEM POWER
-    ARMOR   |   WEAPON
-    -------------------
-    cloth   |   wood      1
-    leather |   bronze    2
-  chainmail |   iron      3
-    steel   |   steel     4
-
-
-             Power Balancing
-             ---------------
-          Enemies   |   AVG hits to kill
-        ------------------------------
-        Goblins     |   2
-Werewolves/Bandits  |  3-4 
-
-
-*/
-
-  
+  } 
 }
 
 export class Mercenary {
@@ -36,6 +16,7 @@ export class Mercenary {
     this.weapon = wood;
     this.armor = cloth;
     this.shield = null;
+    this.cost = 100;
   }
 
   equipItem(item) {
@@ -53,12 +34,12 @@ export class Enemy {
   constructor(name) {
     let wood = new Item("wood", "weapon", 24, 0);
     let cloth = new Item("cloth","armor", 0, 0);
-    let bronze = new Item("bronze", "weapon", 50, 0);
-    let leather = new Item("leather","armor", 0, 8);
-    let iron = new Item("iron", "weapon", 50, 0);
-    // let chainmail = new Item("chainmail","armor", 0, 12);
-    // let steelW = new Item("steel","armor", 50, 0);
-    // let steelA = new Item("steel","armor", 0, 15);
+    let bronze = new Item("bronze", "weapon", 30, 0);
+    let leather = new Item("leather","armor", 0, 5);
+    let iron = new Item("iron", "weapon", 40, 0);
+    let chainmail = new Item("chainmail","armor", 0, 10);
+    let steelW = new Item("steel","armor", 50, 0);
+    let steelA = new Item("steel","armor", 0, 15);
     this.name = name;
     if (name === "werewolf"){
       this.weapon = bronze;
@@ -70,7 +51,15 @@ export class Enemy {
     }
     if(name === "caravan guard"){
       this.weapon = iron;
-      // this.armor = leather;
+      this.armor = leather;
+    }
+    if(name === "manhunter"){
+      this.armor = steelA;
+      this.weapon = wood;
+    }
+    if(name === "knight"){
+      this.armor = steelA;
+      this.weapon = steelW;
     }
     this.health = 100;
     if (name === "goblin"){
@@ -78,10 +67,14 @@ export class Enemy {
       this.weapon = wood;
       this.armor = cloth;
     }
+    if (name === "ogre"){
+      this.health = 200;
+      this.armor = chainmail;
+      this.weapon = iron;
+    }
     this.shield = null;
   }
 }
-
 
 export class Combat {
   constructor() {
@@ -101,7 +94,7 @@ export class Combat {
     }
 
     if (roll === 20) {
-      damage += roll * 2;
+      damage = (damage + roll) * 2;
       this.combatLog.push(`<span style="color: ${this.color};">${char.name} rolled ${roll}. It's a CRITICAL hit. Struck ${target.name} for ${damage}.</span>`);
     } else if (roll === 1) {
       damage = 0;
@@ -116,33 +109,17 @@ export class Combat {
     return damage;
   }
 
-  //receive an array of mercanary objects, and a second array of enemy objects
+  //receive an array of mercanary objects, and a second array of enemy objects to start combat
   combat(mercenaries, enemies) {
-    let i;
-    //create and determine turn order
-    let orderLength;
-    if (mercenaries.length > enemies.length) {
-      orderLength = mercenaries.length;
-    } else {
-      orderLength = enemies.length;
-    }
-    let turnOrder = [];
-    for (i = 0; i < orderLength; i++) {
-      if (i < mercenaries.length) {
-        turnOrder.push(mercenaries[i]);
-      }
-      if (i < enemies.length) {
-        turnOrder.push(enemies[i]);
-      }
-    }
-
     let mcount = 0;
     let ecount = 0;
+    //continue combat until either all mercs or enemies are dead
     while (mercenaries.length > 0 && enemies.length > 0) {
-      //CHANGE ATTACK TO SEND IN OBJECTS
+      //Attack enemy
       enemies[0].health -= this.attack(mercenaries[mcount], enemies[0]);
+      //if they die: display message and remove them from combat
       if (enemies[0].health <= 0) {
-        this.combatLog.push(enemies[0].name + " HAS BEEN SLAYN!");
+        this.combatLog.push(enemies[0].name + " HAS BEEN SLAIN!");
         enemies.shift();
         if (ecount > 0) {
           ecount--;
@@ -152,7 +129,8 @@ export class Combat {
         }
       }
       mcount++;
-      this.combatLog.push("These enemies are left: " + enemies.length);
+      this.combatLog.push(`There are ${enemies.length} enemies left.`);
+
       mercenaries[0].health -= this.attack(enemies[ecount], mercenaries[0]);
       if (mercenaries[0].health <= 0) {
         this.combatLog.push(mercenaries[0].name + " HAS FALLEN!");
@@ -164,7 +142,7 @@ export class Combat {
           break;
         }
       }
-      this.combatLog.push("End of turn. These mercs are left: " + mercenaries.length);
+      this.combatLog.push(`End of turn. You have ${mercenaries.length} mercenaries left.`);
       ecount++;
       if (enemies.length === 1 || ecount === enemies.length - 1) {
         ecount = 0;
@@ -173,11 +151,10 @@ export class Combat {
         mcount = 0;
       }
     }
-
     if(mercenaries.length > 0) {
       this.combatLog.push(`<span style="color:#008000;"><strong>You won with ${mercenaries.length} mercenaries surviving.</strong></span>`);
     } else {
-      this.combatLog.push(`<span style="color:#FF0000;"><strong>All of your mercenaries were defeated.</strong></span>`);
+      this.combatLog.push(`<span style="color:#FF0000;"><strong>All of your mercenaries were defeated. Enemies remaining: ${enemies.length}.</strong></span>`);
     }
     console.log(this.combatLog);
     return mercenaries;

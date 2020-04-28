@@ -1,16 +1,10 @@
-body {
-  background-color: rgb(1, 34, 48);
-  background-image: url("https://images.unsplash.com/photo-1533610067042-1cee3c403282?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjExMjU4fQ&auto=format&fit=crop&w=1500&q=80");
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
 
-#combatlog {
+
+#combatlog, #combatlog2, #combatlog3 {
   padding: 5px;
   background-color: #EEEEEE;
   height: 400px;
   width: 500px;
   overflow-y: scroll;
+  float: left;
 }
