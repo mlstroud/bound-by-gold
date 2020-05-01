@@ -9,8 +9,6 @@ export class Item {
 
 export class Mercenary {
   constructor(name) {
-    //let wood = new Item("bronze", "weapon", 30, 0);
-    //let cloth = new Item("leather", "armor", 0, 5);
     let wood = new Item("wood", "weapon", 24, 0);
     let cloth = new Item("cloth", "armor", 0, 0);
     this.name = name;

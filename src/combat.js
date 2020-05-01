@@ -36,7 +36,6 @@ export class Combat {
 
   //receive an array of mercanary objects, and a second array of enemy objects to start combat
   combat(mercenaries, enemies) {
-    console.log(mercenaries.length);
     if (mercenaries.length === 0) {
       this.combatLog.push('<span style="color:#FFFFFF;">Your mercenary company is empty. Please buy more mercenaries.</span>');
     } else {
@@ -86,7 +85,6 @@ export class Combat {
         this.combatLog.push(`<span style="color:#FF0000;"><strong>All of your mercenaries were defeated. Enemies remaining: ${enemies.length}.</strong></span>`);
       }
     }
-    console.log(this.combatLog);
     return mercenaries;
   }
 }
